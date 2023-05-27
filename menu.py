@@ -1,9 +1,9 @@
-import os
+import helpers
 
 
 def iniciar():
     while True:
-        os.system('cls')
+        helpers.limpiar_consola()
 
         print('=======================')
         print(' Bienvenido al Gestor  ')
@@ -19,7 +19,7 @@ def iniciar():
         print('=======================')
 
         opcion = input('> ')
-        os.system('cls')
+        helpers.limpiar_consola()
 
         if opcion == '1':
             print('listando clientes')
