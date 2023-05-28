@@ -1,5 +1,5 @@
 class Cliente:
-    def __init__(self, dni: int, nombre: str, apellido: str):
+    def __init__(self, dni: str, nombre: str, apellido: str):
         self.dni = dni
         self.nombre = nombre
         self.apellido = apellido
@@ -10,22 +10,22 @@ class Cliente:
 
 class Clientes:
 
-    lista = []
+    lista: list = []
 
     @staticmethod
-    def buscar_cliente(dni: int) -> Cliente:
+    def buscar_cliente(dni: str) -> Cliente:
         for cliente in Clientes.lista:
             if cliente.dni == dni:
                 return cliente
 
     @staticmethod
-    def crear_cliente(dni: int, nombre: str, apellido: str) -> Cliente:
-        cliente = Cliente(dni, nombre, apellido)
+    def crear_cliente(dni: str, nombre: str, apellido: str) -> Cliente:
+        cliente: Cliente = Cliente(dni, nombre, apellido)
         Clientes.lista.append(cliente)
         return cliente
 
     @staticmethod
-    def modificar_cliente(dni: int, nombre: str, apellido: str) -> Cliente:
+    def modificar_cliente(dni: str, nombre: str, apellido: str) -> Cliente:
         for indice, cliente in enumerate(Clientes.lista):
             if cliente.dni == dni:
                 Clientes.lista[indice].nombre = nombre
@@ -33,7 +33,7 @@ class Clientes:
                 return Clientes.lista[indice]
 
     @staticmethod
-    def borrar_cliente(dni: int) -> Cliente:
+    def borrar_cliente(dni: str) -> Cliente:
         for indice, cliente in enumerate(Clientes.lista):
             if cliente.dni == dni:
                 return Clientes.lista.pop(indice)
