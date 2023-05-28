@@ -1,4 +1,5 @@
 import helpers
+import database as db
 
 
 def iniciar():
@@ -22,17 +23,56 @@ def iniciar():
         helpers.limpiar_consola()
 
         if opcion == '1':
-            print('listando clientes')
+            if len(db.Clientes.lista) == 0:
+                print('No hay clientes en la base de datos')
+            else:
+                for cliente in db.Clientes.lista:
+                    print(cliente)
         elif opcion == '2':
-            print('Buscando cliente')
+            if len(db.Clientes.lista) == 0:
+                print('No hay clientes en la base de datos')
+            else:
+                dni = helpers.leer_texto(
+                    8, 8, 'Ingrese un DNI (ejemplo 43236541)')
+                cliente = db.Clientes.buscar_cliente(int(dni))
+                print(cliente)
         elif opcion == '3':
-            print('Agregando cliente')
+            dni = helpers.leer_texto(
+                8, 8, 'Ingrese un DNI (ejemplo 43236541)')
+            nombre = helpers.leer_texto(
+                3, 45, 'Ingrese un nombre').capitalize()
+            apellido = helpers.leer_texto(
+                3, 45, 'Ingrese un apellido').capitalize()
+            print()
+            print('Cliente agregado correctamente') if db.Clientes.crear_cliente(
+                int(dni), nombre, apellido) else print('Cliente no agregado')
         elif opcion == '4':
-            print('Modificar cliente')
+            if len(db.Clientes.lista) == 0:
+                print('No hay clientes en la base de datos')
+            else:
+                dni = helpers.leer_texto(
+                    8, 8, 'Ingrese un DNI (ejemplo 43236541)')
+                cliente = db.Clientes.buscar_cliente(int(dni))
+                if cliente:
+                    nombre = helpers.leer_texto(
+                        3, 45, f'Ingrese un nombre [{cliente.nombre}]').capitalize()
+                    apellido = helpers.leer_texto(
+                        3, 45, f'Ingrese un apellido [{cliente.apellido}]').capitalize()
+                    db.Clientes.modificar_cliente(
+                        int(dni), nombre, apellido)
+                    print('Cliente modificado correctamente')
+                else:
+                    print(f'No se encontro el cliente con DNI: {dni}')
         elif opcion == '5':
-            print('Borrar cliente')
+            if len(db.Clientes.lista) == 0:
+                print('No hay clientes en la base de datos')
+            else:
+                dni = helpers.leer_texto(
+                    8, 8, 'Ingrese un DNI (ejemplo 43236541)')
+                print()
+                print('Cliente eliminado correctamente') if db.Clientes.borrar_cliente(
+                    int(dni)) else print('Cliente no encontrado')
         elif opcion == '6':
-            print('Buscando cliente')
             break
         else:
             print('Opcion no valida!')
