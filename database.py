@@ -1,3 +1,8 @@
+import csv
+from typing import List
+import config
+
+
 class Cliente:
     def __init__(self, dni: str, nombre: str, apellido: str):
         self.dni = dni
@@ -10,7 +15,12 @@ class Cliente:
 
 class Clientes:
 
-    lista: list = []
+    lista: List[Cliente] = []
+    with open(config.DATABASE_PATH, newline='\n') as fichero:
+        reader = csv.reader(fichero, delimiter=';')
+        for dni, nombre, apellido in reader:
+            cliente = Cliente(dni, nombre, apellido)
+            lista.append(cliente)
 
     @staticmethod
     def buscar_cliente(dni: str) -> Cliente:
@@ -22,6 +32,7 @@ class Clientes:
     def crear_cliente(dni: str, nombre: str, apellido: str) -> Cliente:
         cliente: Cliente = Cliente(dni, nombre, apellido)
         Clientes.lista.append(cliente)
+        Clientes.guardar()
         return cliente
 
     @staticmethod
@@ -30,10 +41,21 @@ class Clientes:
             if cliente.dni == dni:
                 Clientes.lista[indice].nombre = nombre
                 Clientes.lista[indice].apellido = apellido
+                Clientes.guardar()
                 return Clientes.lista[indice]
 
     @staticmethod
     def borrar_cliente(dni: str) -> Cliente:
         for indice, cliente in enumerate(Clientes.lista):
             if cliente.dni == dni:
-                return Clientes.lista.pop(indice)
+                cliente_eliminado = Clientes.lista.pop(indice)
+                Clientes.guardar()
+                return cliente_eliminado
+
+    @staticmethod
+    def guardar() -> None:
+        with open(config.DATABASE_PATH, 'w', newline='\n') as fichero:
+            writer = csv.writer(fichero, delimiter=';')
+            for cliente in Clientes.lista:
+                writer.writerow(
+                    (cliente.dni, cliente.nombre, cliente.apellido))
