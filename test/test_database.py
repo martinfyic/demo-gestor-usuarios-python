@@ -1,3 +1,5 @@
+import config
+import csv
 import copy
 import helpers
 import unittest
@@ -51,3 +53,19 @@ class TestDataBase(unittest.TestCase):
         self.assertFalse(helpers.dni_valido('11111111', db.Clientes.lista))
         self.assertFalse(helpers.dni_valido('123', db.Clientes.lista))
         self.assertFalse(helpers.dni_valido('23fds', db.Clientes.lista))
+
+    def test_escritura_csv(self):
+        db.Clientes.borrar_cliente('11111111')
+        db.Clientes.borrar_cliente('20983645')
+        db.Clientes.borrar_cliente('14239862')
+        db.Clientes.modificar_cliente(
+            '20983512', 'PruebaTest', 'TestEscritura')
+
+        dni, nombre, apellido = None, None, None
+        with open(config.DATABASE_PATH, newline='\n') as fichero:
+            reader = csv.reader(fichero, delimiter=';')
+            dni, nombre, apellido = next(reader)
+
+        self.assertEqual(dni, '20983512')
+        self.assertEqual(nombre, 'PruebaTest')
+        self.assertEqual(apellido, 'TestEscritura')
